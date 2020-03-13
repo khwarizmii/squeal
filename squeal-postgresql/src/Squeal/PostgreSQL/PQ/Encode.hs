@@ -54,7 +54,7 @@ import Data.Kind
 import Data.Scientific (Scientific)
 import Data.Text as Strict (Text)
 import Data.Text.Lazy as Lazy (Text)
-import Data.Time (Day, TimeOfDay, TimeZone, LocalTime, UTCTime, DiffTime)
+import Data.Time (Day, TimeOfDay, LocalTime, UTCTime, DiffTime)
 import Data.UUID.Types (UUID)
 import Data.Vector (Vector)
 import Data.Word (Word32)
@@ -121,7 +121,7 @@ instance ToPG db Strict.ByteString where toPG = pure . bytea_strict
 instance ToPG db Lazy.ByteString where toPG = pure . bytea_lazy
 instance ToPG db Day where toPG = pure . date
 instance ToPG db TimeOfDay where toPG = pure . time_int
-instance ToPG db (TimeOfDay, TimeZone) where toPG = pure . timetz_int
+instance ToPG db TimeTZ where toPG (TimeTZ t tz) = pure $ timetz_int (t,tz)
 instance ToPG db LocalTime where toPG = pure . timestamp_int
 instance ToPG db UTCTime where toPG = pure . timestamptz_int
 instance ToPG db DiffTime where toPG = pure . interval_int

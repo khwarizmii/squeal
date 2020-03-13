@@ -40,8 +40,9 @@ module Squeal.PostgreSQL.PG
   , NullPG
   , TuplePG
   , RowPG
-    -- * Storage newtypes
+    -- * Storage types
   , Money (..)
+  , TimeTZ (..)
   , Json (..)
   , Jsonb (..)
   , Composite (..)
@@ -309,6 +310,12 @@ type family FixPG (hask :: Type) :: NullType where
   FixPG (x,x,x,x,x,x,x,x,x,x) = FixPG x
   FixPG (x,x,x,x,x,x,x,x,x,x,x) = FixPG x
   FixPG x = NullPG x
+
+data TimeTZ = TimeTZ
+  { timetzTime :: TimeOfDay
+  , timetzZone :: TimeZone
+  } deriving stock (Eq, Ord, Show, Read, GHC.Generic)
+instance IsPG TimeTZ where type PG TimeTZ = 'PGtimetz
 
 {- | The `Money` newtype stores a monetary value in terms
 of the number of cents, i.e. @$2,000.20@ would be expressed as

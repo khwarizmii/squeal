@@ -57,7 +57,7 @@ import Data.Bits
 import Data.Int (Int16, Int32, Int64)
 import Data.Kind
 import Data.Scientific (Scientific)
-import Data.Time (Day, TimeOfDay, TimeZone, LocalTime, UTCTime, DiffTime)
+import Data.Time (Day, TimeOfDay, LocalTime, UTCTime, DiffTime)
 import Data.UUID.Types (UUID)
 import Data.Vector (Vector)
 import Database.PostgreSQL.LibPQ (Oid(Oid))
@@ -202,8 +202,8 @@ instance FromPG Day where
   fromPG = devalue date
 instance FromPG TimeOfDay where
   fromPG = devalue time_int
-instance FromPG (TimeOfDay, TimeZone) where
-  fromPG = devalue timetz_int
+instance FromPG TimeTZ where
+  fromPG = devalue $ fmap (\(t,tz) -> TimeTZ t tz) timetz_int
 instance FromPG LocalTime where
   fromPG = devalue timestamp_int
 instance FromPG UTCTime where
