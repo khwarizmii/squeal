@@ -175,7 +175,7 @@ instance RenderSQL (TypeExpression db ty) where
 -- | The enum or composite type in a `Typedef` can be expressed by its alias.
 typedef
   :: (Has sch db schema, Has td schema ('Typedef ty))
-  => QualifiedAlias sch td
+  => SOP.K (Alias sch) td
   -- ^ type alias
   -> TypeExpression db (null ty)
 typedef = UnsafeTypeExpression . renderSQL
@@ -184,7 +184,7 @@ typedef = UnsafeTypeExpression . renderSQL
 -- by its alias.
 typetable
   :: (Has sch db schema, Has tab schema ('Table table))
-  => QualifiedAlias sch tab
+  => SOP.K (Alias sch) tab
   -- ^ table alias
   -> TypeExpression db (null ('PGcomposite (TableToRow table)))
 typetable = UnsafeTypeExpression . renderSQL
@@ -193,7 +193,7 @@ typetable = UnsafeTypeExpression . renderSQL
 -- by its alias.
 typeview
   :: (Has sch db schema, Has vw schema ('View view))
-  => QualifiedAlias sch vw
+  => SOP.K (Alias sch) vw
   -- ^ view alias
   -> TypeExpression db (null ('PGcomposite view))
 typeview = UnsafeTypeExpression . renderSQL

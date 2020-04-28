@@ -74,7 +74,7 @@ deleteFrom
   :: ( SOP.SListI row
      , Has sch db schema
      , Has tab schema ('Table table) )
-  => QualifiedAlias sch tab -- ^ table to delete from
+  => SOP.K (Alias sch) tab -- ^ table to delete from
   -> UsingClause with db params from
   -> Condition  'Ungrouped '[] with db params (tab ::: TableToRow table ': from)
   -- ^ condition under which to delete a row
@@ -94,7 +94,7 @@ deleteFrom tab using wh returning = UnsafeManipulation $
 deleteFrom_
   :: ( Has sch db schema
      , Has tab schema ('Table table) )
-  => QualifiedAlias sch tab -- ^ table to delete from
+  => SOP.K (Alias sch) tab -- ^ table to delete from
   -> Condition  'Ungrouped '[] with db params '[tab ::: TableToRow table]
   -- ^ condition under which to delete a row
   -> Manipulation with db params '[]

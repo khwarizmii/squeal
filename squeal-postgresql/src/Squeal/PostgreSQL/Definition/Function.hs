@@ -80,7 +80,7 @@ createFunction
   :: ( Has sch db schema
      , KnownSymbol fun
      , SOP.SListI args )
-  => QualifiedAlias sch fun -- ^ function alias
+  => SOP.K (Alias sch) fun -- ^ function alias
   -> NP (TypeExpression db) args -- ^ arguments
   -> TypeExpression db ret -- ^ return type
   -> FunctionDefinition db args ('Returns ret) -- ^ function definition
@@ -110,7 +110,7 @@ createOrReplaceFunction
   :: ( Has sch db schema
      , KnownSymbol fun
      , SOP.SListI args )
-  => QualifiedAlias sch fun -- ^ function alias
+  => SOP.K (Alias sch) fun -- ^ function alias
   -> NP (TypeExpression db) args -- ^ arguments
   -> TypeExpression db ret -- ^ return type
   -> FunctionDefinition db args ('Returns ret) -- ^ function definition
@@ -155,7 +155,7 @@ createSetFunction
      , KnownSymbol fun
      , SOP.SListI args
      , SOP.SListI rets )
-  => QualifiedAlias sch fun -- ^ function alias
+  => SOP.K (Alias sch) fun -- ^ function alias
   -> NP (TypeExpression db) args -- ^ arguments
   -> NP (Aliased (TypeExpression db)) rets -- ^ return type
   -> FunctionDefinition db args ('ReturnsTable rets) -- ^ function definition
@@ -188,7 +188,7 @@ createOrReplaceSetFunction
      , KnownSymbol fun
      , SOP.SListI args
      , SOP.SListI rets )
-  => QualifiedAlias sch fun -- ^ function alias
+  => SOP.K (Alias sch) fun -- ^ function alias
   -> NP (TypeExpression db) args -- ^ arguments
   -> NP (Aliased (TypeExpression db)) rets -- ^ return type
   -> FunctionDefinition db args ('ReturnsTable rets) -- ^ function definition
@@ -216,7 +216,7 @@ DROP FUNCTION "fn";
 -}
 dropFunction
   :: (Has sch db schema, KnownSymbol fun)
-  => QualifiedAlias sch fun
+  => SOP.K (Alias sch) fun
   -- ^ function alias
   -> Definition db (Alter sch (DropSchemum fun 'Function schema) db)
 dropFunction fun = UnsafeDefinition $
@@ -235,7 +235,7 @@ DROP FUNCTION IF EXISTS "fn";
 -}
 dropFunctionIfExists
   :: (Has sch db schema, KnownSymbol fun)
-  => QualifiedAlias sch fun
+  => SOP.K (Alias sch) fun
   -- ^ function alias
   -> Definition db (Alter sch (DropSchemumIfExists fun 'Function schema) db)
 dropFunctionIfExists fun = UnsafeDefinition $

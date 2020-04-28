@@ -103,7 +103,7 @@ createTable
      , SOP.SListI constraints
      , Has sch db0 schema0
      , db1 ~ Alter sch (Create tab ('Table (constraints :=> columns)) schema0) db0 )
-  => QualifiedAlias sch tab -- ^ the name of the table to add
+  => SOP.K (Alias sch) tab -- ^ the name of the table to add
   -> NP (Aliased (ColumnTypeExpression db0)) columns
     -- ^ the names and datatype of each column
   -> NP (Aliased (TableConstraintExpression sch tab db1)) constraints
@@ -143,7 +143,7 @@ createTableIfNotExists
      , SOP.SListI constraints
      , Has sch db0 schema0
      , db1 ~ Alter sch (CreateIfNotExists tab ('Table (constraints :=> columns)) schema0) db0 )
-  => QualifiedAlias sch tab -- ^ the name of the table to add
+  => SOP.K (Alias sch) tab -- ^ the name of the table to add
   -> NP (Aliased (ColumnTypeExpression db0)) columns
     -- ^ the names and datatype of each column
   -> NP (Aliased (TableConstraintExpression sch tab db1)) constraints
@@ -159,7 +159,7 @@ renderCreation
      , KnownSymbol tab
      , SOP.SListI columns
      , SOP.SListI constraints )
-  => QualifiedAlias sch tab -- ^ the name of the table to add
+  => SOP.K (Alias sch) tab -- ^ the name of the table to add
   -> NP (Aliased (ColumnTypeExpression db0)) columns
     -- ^ the names and datatype of each column
   -> NP (Aliased (TableConstraintExpression sch tab db1)) constraints
@@ -196,7 +196,7 @@ renderCreation tab columns constraints = renderSQL tab
 dropTable
   :: ( Has sch db schema
      , KnownSymbol tab )
-  => QualifiedAlias sch tab -- ^ table to remove
+  => SOP.K (Alias sch) tab -- ^ table to remove
   -> Definition db (Alter sch (DropSchemum tab 'Table schema) db)
 dropTable tab = UnsafeDefinition $ "DROP TABLE" <+> renderSQL tab <> ";"
 
@@ -204,7 +204,7 @@ dropTable tab = UnsafeDefinition $ "DROP TABLE" <+> renderSQL tab <> ";"
 dropTableIfExists
   :: ( Has sch db schema
      , KnownSymbol tab)
-  => QualifiedAlias sch tab -- ^ table to remove
+  => SOP.K (Alias sch) tab -- ^ table to remove
   -> Definition db (Alter sch (DropSchemumIfExists tab 'Table schema) db)
 dropTableIfExists tab = UnsafeDefinition $
   "DROP TABLE IF EXISTS" <+> renderSQL tab <> ";"
@@ -212,7 +212,7 @@ dropTableIfExists tab = UnsafeDefinition $
 -- | `alterTable` changes the definition of a table from the schema.
 alterTable
   :: (Has sch db schema, KnownSymbol tab)
-  => QualifiedAlias sch tab -- ^ table to alter
+  => SOP.K (Alias sch) tab -- ^ table to alter
   -> AlterTable sch tab db table -- ^ alteration to perform
   -> Definition db (Alter sch (Alter tab ('Table table) schema) db)
 alterTable tab alteration = UnsafeDefinition $
@@ -224,7 +224,7 @@ alterTable tab alteration = UnsafeDefinition $
 -- | `alterTable` changes the definition of a table from the schema.
 alterTableIfExists
   :: (Has sch db schema, KnownSymbol tab)
-  => QualifiedAlias sch tab -- ^ table to alter
+  => SOP.K (Alias sch) tab -- ^ table to alter
   -> AlterTable sch tab db table -- ^ alteration to perform
   -> Definition db (Alter sch (AlterIfExists tab ('Table table) schema) db)
 alterTableIfExists tab alteration = UnsafeDefinition $

@@ -22,6 +22,7 @@ Squeal can reference aliases by prepending with a @#@.
   , LambdaCase
   , OverloadedStrings
   , QuantifiedConstraints
+  , PatternSynonyms
   , RankNTypes
   , ScopedTypeVariables
   , StandaloneDeriving
@@ -47,7 +48,7 @@ module Squeal.PostgreSQL.Type.Alias
   , HasAll
   , HasIn
     -- * Qualified Aliases
-  , QualifiedAlias (..)
+  , pattern QualifiedAlias
   , IsQualified (..)
     -- * Grouping
   , Grouping (..)
@@ -237,21 +238,21 @@ in printSQL alias1 >> printSQL alias2
 "sch"."tab"
 "vw"
 -}
-data QualifiedAlias (qualifier :: Symbol) (alias :: Symbol) = QualifiedAlias
-  deriving (Eq,GHC.Generic,Ord,Show,NFData)
-instance (q ~ q', a ~ a') => IsQualified q a (QualifiedAlias q' a') where
-  _ ! _ = QualifiedAlias
-instance (q' ~ "public", a ~ a') => IsLabel a (QualifiedAlias q' a') where
-  fromLabel = QualifiedAlias
+pattern QualifiedAlias :: forall sch obj. SOP.K (Alias sch) obj
+pattern QualifiedAlias = SOP.K Alias
+instance (q ~ q', a ~ a') => IsQualified q a (SOP.K (Alias q') a') where
+  _ ! _ = SOP.K Alias
+instance (q' ~ "public", a ~ a') => IsLabel a (SOP.K (Alias q') a') where
+  fromLabel = SOP.K Alias
 instance (q0 ~ q1, a0 ~ a1, a1 ~ a2, KnownSymbol a2) =>
-  IsQualified q0 a0 (Aliased (QualifiedAlias q1) (a1 ::: a2)) where
-    _ ! _ = QualifiedAlias `As` Alias
+  IsQualified q0 a0 (Aliased (SOP.K (Alias q1)) (a1 ::: a2)) where
+    _ ! _ = SOP.K Alias `As` Alias
 instance (q ~ "public", a0 ~ a1, a1 ~ a2, KnownSymbol a2) =>
-  IsLabel a0 (Aliased (QualifiedAlias q) (a1 ::: a2)) where
-    fromLabel = QualifiedAlias `As` Alias
+  IsLabel a0 (Aliased (SOP.K (Alias q)) (a1 ::: a2)) where
+    fromLabel = SOP.K Alias `As` Alias
 
 instance (KnownSymbol q, KnownSymbol a)
-  => RenderSQL (QualifiedAlias q a) where
+  => RenderSQL (SOP.K (Alias q) a) where
     renderSQL _ =
       let
         qualifier = renderSQL (Alias @q)

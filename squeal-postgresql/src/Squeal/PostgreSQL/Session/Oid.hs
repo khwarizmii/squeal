@@ -168,9 +168,9 @@ instance
 
 oidOfTypedef
   :: (Has sch db schema, Has ty schema pg)
-  => QualifiedAlias sch ty
+  => SOP.K (Alias sch) ty
   -> ReaderT (SOP.K LibPQ.Connection db) IO LibPQ.Oid
-oidOfTypedef (_ :: QualifiedAlias sch ty) = ReaderT $ \(SOP.K conn) -> do
+oidOfTypedef (_ :: SOP.K (Alias sch) ty) = ReaderT $ \(SOP.K conn) -> do
   resultMaybe <- LibPQ.execParams conn q [] LibPQ.Binary
   case resultMaybe of
     Nothing -> throwIO $ ConnectionException "LibPQ.execParams"
@@ -195,9 +195,9 @@ oidOfTypedef (_ :: QualifiedAlias sch ty) = ReaderT $ \(SOP.K conn) -> do
 
 oidOfArrayTypedef
   :: (Has sch db schema, Has ty schema pg)
-  => QualifiedAlias sch ty
+  => SOP.K (Alias sch) ty
   -> ReaderT (SOP.K LibPQ.Connection db) IO LibPQ.Oid
-oidOfArrayTypedef (_ :: QualifiedAlias sch ty) = ReaderT $ \(SOP.K conn) -> do
+oidOfArrayTypedef (_ :: SOP.K (Alias sch) ty) = ReaderT $ \(SOP.K conn) -> do
   resultMaybe <- LibPQ.execParams conn q [] LibPQ.Binary
   case resultMaybe of
     Nothing -> throwIO $ ConnectionException "LibPQ.execParams"

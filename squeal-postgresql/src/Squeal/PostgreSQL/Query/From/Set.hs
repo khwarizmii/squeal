@@ -117,7 +117,7 @@ in
 setFunction
   :: ( Has sch db schema
      , Has fun schema ('Function ('[ty] :=> 'ReturnsTable row)) )
-  => QualifiedAlias sch fun -- ^ function alias
+  => K (Alias sch) fun -- ^ function alias
   -> SetFun db ty (fun ::: row)
 setFunction fun = unsafeSetFunction (renderSQL fun)
 
@@ -148,7 +148,7 @@ setFunctionN
   :: ( Has sch db schema
      , Has fun schema ('Function (tys :=> 'ReturnsTable row))
      , SOP.SListI tys )
-  => QualifiedAlias sch fun -- ^ function alias
+  => K (Alias sch) fun -- ^ function alias
   -> SetFunN db tys (fun ::: row)
 setFunctionN fun = unsafeSetFunctionN (renderSQL fun)
 

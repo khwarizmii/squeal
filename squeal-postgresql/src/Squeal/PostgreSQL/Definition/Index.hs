@@ -50,6 +50,7 @@ import Data.ByteString
 import GHC.TypeLits
 
 import qualified GHC.Generics as GHC
+import qualified Generics.SOP as SOP
 
 import Squeal.PostgreSQL.Type.Alias
 import Squeal.PostgreSQL.Definition
@@ -83,7 +84,7 @@ CREATE INDEX "ix" ON "tab" USING btree (("a") ASC NULLS FIRST, ("b") ASC NULLS L
 createIndex
   :: (Has sch db schema, Has tab schema ('Table table), KnownSymbol ix)
   => Alias ix -- ^ index alias
-  -> QualifiedAlias sch tab -- ^ table alias
+  -> SOP.K (Alias sch) tab -- ^ table alias
   -> IndexMethod method -- ^ index method
   -> [SortExpression 'Ungrouped '[] '[] db '[] '[tab ::: TableToRow table]]
   -- ^ sorted columns
@@ -110,7 +111,7 @@ createIndex ix tab method cols = UnsafeDefinition $
 createIndexIfNotExists
   :: (Has sch db schema, Has tab schema ('Table table), KnownSymbol ix)
   => Alias ix -- ^ index alias
-  -> QualifiedAlias sch tab -- ^ table alias
+  -> SOP.K (Alias sch) tab -- ^ table alias
   -> IndexMethod method -- ^ index method
   -> [SortExpression 'Ungrouped '[] '[] db '[] '[tab ::: TableToRow table]]
   -- ^ sorted columns
@@ -173,14 +174,14 @@ brin = UnsafeIndexMethod "brin"
 -- DROP INDEX "ix";
 dropIndex
   :: (Has sch db schema, KnownSymbol ix)
-  => QualifiedAlias sch ix -- index alias
+  => SOP.K (Alias sch) ix -- index alias
   -> Definition db (Alter sch (DropSchemum ix 'Index schema) db)
 dropIndex ix = UnsafeDefinition $ "DROP INDEX" <+> renderSQL ix <> ";"
 
 -- | Drop an index if it exists.
 dropIndexIfExists
   :: (Has sch db schema, KnownSymbol ix)
-  => QualifiedAlias sch ix -- index alias
+  => SOP.K (Alias sch) ix -- index alias
   -> Definition db (Alter sch (DropSchemumIfExists ix 'Index schema) db)
 dropIndexIfExists ix = UnsafeDefinition $
   "DROP INDEX IF EXISTS" <+> renderSQL ix <> ";"

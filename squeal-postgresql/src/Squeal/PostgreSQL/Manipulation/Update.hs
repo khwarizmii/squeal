@@ -68,7 +68,7 @@ update
      , Has tab schema ('Table table)
      , Updatable table updates
      , SOP.SListI row )
-  => QualifiedAlias sch tab -- ^ table to update
+  => SOP.K (Alias sch) tab -- ^ table to update
   -> NP (Aliased (Optional (Expression 'Ungrouped '[] '[] db params '[tab ::: TableToRow table]))) updates
   -- ^ modified values to replace old values
   -> Condition  'Ungrouped '[] with db params '[tab ::: TableToRow table]
@@ -88,7 +88,7 @@ update_
   :: ( Has sch db schema
      , Has tab schema ('Table table)
      , Updatable table updates )
-  => QualifiedAlias sch tab -- ^ table to update
+  => SOP.K (Alias sch) tab -- ^ table to update
   -> NP (Aliased (Optional (Expression 'Ungrouped '[] '[] db params '[tab ::: TableToRow table]))) updates
   -- ^ modified values to replace old values
   -> Condition  'Ungrouped '[] with db params '[tab ::: TableToRow table]

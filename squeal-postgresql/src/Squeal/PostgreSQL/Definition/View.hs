@@ -40,6 +40,8 @@ module Squeal.PostgreSQL.Definition.View
 
 import GHC.TypeLits
 
+import qualified Generics.SOP as SOP
+
 import Squeal.PostgreSQL.Type.Alias
 import Squeal.PostgreSQL.Definition
 import Squeal.PostgreSQL.Query
@@ -66,7 +68,7 @@ CREATE VIEW "bc" AS SELECT "b" AS "b", "c" AS "c" FROM "abc" AS "abc";
 -}
 createView
   :: (Has sch db schema, KnownSymbol vw)
-  => QualifiedAlias sch vw -- ^ the name of the view to add
+  => SOP.K (Alias sch) vw -- ^ the name of the view to add
   -> Query '[] '[] db '[] view -- ^ query
   -> Definition db (Alter sch (Create vw ('View view) schema) db)
 createView alias query = UnsafeDefinition $
@@ -90,7 +92,7 @@ CREATE OR REPLACE VIEW "bc" AS SELECT "b" AS "b", "c" AS "c" FROM "abc" AS "abc"
 -}
 createOrReplaceView
   :: (Has sch db schema, KnownSymbol vw)
-  => QualifiedAlias sch vw -- ^ the name of the view to add
+  => SOP.K (Alias sch) vw -- ^ the name of the view to add
   -> Query '[] '[] db '[] view -- ^ query
   -> Definition db (Alter sch (CreateOrReplace vw ('View view) schema) db)
 createOrReplaceView alias query = UnsafeDefinition $
@@ -111,7 +113,7 @@ createOrReplaceView alias query = UnsafeDefinition $
 -- DROP VIEW "bc";
 dropView
   :: (Has sch db schema, KnownSymbol vw)
-  => QualifiedAlias sch vw -- ^ view to remove
+  => SOP.K (Alias sch) vw -- ^ view to remove
   -> Definition db (Alter sch (DropSchemum vw 'View schema) db)
 dropView vw = UnsafeDefinition $ "DROP VIEW" <+> renderSQL vw <> ";"
 
@@ -129,7 +131,7 @@ dropView vw = UnsafeDefinition $ "DROP VIEW" <+> renderSQL vw <> ";"
 -- DROP VIEW IF EXISTS "bc";
 dropViewIfExists
   :: (Has sch db schema, KnownSymbol vw)
-  => QualifiedAlias sch vw -- ^ view to remove
+  => SOP.K (Alias sch) vw -- ^ view to remove
   -> Definition db (Alter sch (DropIfExists vw schema) db)
 dropViewIfExists vw = UnsafeDefinition $
   "DROP VIEW IF EXISTS" <+> renderSQL vw <> ";"

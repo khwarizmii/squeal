@@ -130,7 +130,7 @@ str1 <+> str2 = str1 <> " " <> str2
 -- | Drop table custom SQL statement with 'cascade'
 dropTableCascade
   :: (Has sch schemas schema, Has tab schema ( 'Table table))
-  => QualifiedAlias sch tab -- ^ table to remove
+  => K (Alias sch) tab -- ^ table to remove
   -> Definition schemas (Alter sch (Drop tab schema) schemas)
 dropTableCascade tab =
   UnsafeDefinition $ "DROP TABLE" <+> renderSQL tab <> " cascade;"

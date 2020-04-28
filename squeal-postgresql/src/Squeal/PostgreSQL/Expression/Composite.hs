@@ -84,7 +84,7 @@ field
   :: ( Has sch db schema
      , Has tydef schema ('Typedef ('PGcomposite row))
      , Has field row ty)
-  => QualifiedAlias sch tydef -- ^ row type
+  => SOP.K (Alias sch) tydef -- ^ row type
   -> Alias field -- ^ field name
   -> Expression grp lat with db params from ('NotNull ('PGcomposite row))
   -> Expression grp lat with db params from ty

@@ -44,6 +44,7 @@ import Control.DeepSeq
 import Data.ByteString (ByteString)
 
 import qualified GHC.Generics as GHC
+import qualified Generics.SOP as SOP
 
 import Squeal.PostgreSQL.Type.Alias
 import Squeal.PostgreSQL.Query
@@ -77,7 +78,7 @@ instance RenderSQL (FromClause lat with db params from) where
 -- | A real `table` is a table from the database.
 table
   :: (Has sch db schema, Has tab schema ('Table table))
-  => Aliased (QualifiedAlias sch) (alias ::: tab) -- ^ (renamable) table alias
+  => Aliased (SOP.K (Alias sch)) (alias ::: tab) -- ^ (renamable) table alias
   -> FromClause lat with db params '[alias ::: TableToRow table]
 table (tab `As` alias) = UnsafeFromClause $
   renderSQL tab <+> "AS" <+> renderSQL alias
@@ -92,7 +93,7 @@ subquery = UnsafeFromClause . renderAliased (parenthesized . renderSQL)
 -- | `view` derives a table from a `View`.
 view
   :: (Has sch db schema, Has vw schema ('View view))
-  => Aliased (QualifiedAlias sch) (alias ::: vw) -- ^ (renamable) view alias
+  => Aliased (SOP.K (Alias sch)) (alias ::: vw) -- ^ (renamable) view alias
   -> FromClause lat with db params '[alias ::: view]
 view (vw `As` alias) = UnsafeFromClause $
   renderSQL vw <+> "AS" <+> renderSQL alias

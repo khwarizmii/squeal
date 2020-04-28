@@ -70,7 +70,7 @@ import Squeal.PostgreSQL.Type.Schema
 -- CREATE TYPE "mood" AS ENUM ('sad', 'ok', 'happy');
 createTypeEnum
   :: (KnownSymbol enum, Has sch db schema, SOP.All KnownSymbol labels)
-  => QualifiedAlias sch enum
+  => SOP.K (Alias sch) enum
   -- ^ name of the user defined enumerated type
   -> NP PGlabel labels
   -- ^ labels of the enumerated type
@@ -98,7 +98,7 @@ createTypeEnumFrom
   , SOP.All KnownSymbol (LabelsPG hask)
   , KnownSymbol enum
   , Has sch db schema )
-  => QualifiedAlias sch enum
+  => SOP.K (Alias sch) enum
   -- ^ name of the user defined enumerated type
   -> Definition db (Alter sch (Create enum ('Typedef (PG (Enumerated hask))) schema) db)
 createTypeEnumFrom enum = createTypeEnum enum
@@ -124,7 +124,7 @@ CREATE TYPE "complex" AS ("real" float8, "imaginary" float8);
 -}
 createTypeComposite
   :: (KnownSymbol ty, Has sch db schema, SOP.SListI fields)
-  => QualifiedAlias sch ty
+  => SOP.K (Alias sch) ty
   -- ^ name of the user defined composite type
   -> NP (Aliased (TypeExpression db)) fields
   -- ^ list of attribute names and data types
@@ -156,7 +156,7 @@ createTypeCompositeFrom
   ( SOP.All (FieldTyped db) (RowPG hask)
   , KnownSymbol ty
   , Has sch db schema )
-  => QualifiedAlias sch ty
+  => SOP.K (Alias sch) ty
   -- ^ name of the user defined composite type
   -> Definition db (Alter sch (Create ty ( 'Typedef (PG (Composite hask))) schema) db)
 createTypeCompositeFrom ty = createTypeComposite ty
@@ -184,7 +184,7 @@ CREATE DOMAIN "positive" AS real CHECK (("value" > (0.0 :: float4)));
 -}
 createDomain
   :: (Has sch db schema, KnownSymbol dom)
-  => QualifiedAlias sch dom -- ^ domain alias
+  => SOP.K (Alias sch) dom -- ^ domain alias
   -> (forall null. TypeExpression db (null ty)) -- ^ underlying type
   -> (forall tab. Condition 'Ungrouped '[] '[] db '[] '[tab ::: '["value" ::: 'Null ty]])
     -- ^ constraint on type
@@ -216,7 +216,7 @@ CREATE TYPE "int2range" AS RANGE (subtype = int2);
 -}
 createTypeRange
   :: (Has sch db schema, KnownSymbol range)
-  => QualifiedAlias sch range -- ^ range alias
+  => SOP.K (Alias sch) range -- ^ range alias
   -> (forall null. TypeExpression db (null ty)) -- ^ underlying type
   -> Definition db (Alter sch (Create range ('Typedef ('PGrange ty)) schema) db)
 createTypeRange range ty = UnsafeDefinition $
@@ -232,7 +232,7 @@ createTypeRange range ty = UnsafeDefinition $
 -- DROP TYPE "schwarma";
 dropType
   :: (Has sch db schema, KnownSymbol td)
-  => QualifiedAlias sch td
+  => SOP.K (Alias sch) td
   -- ^ name of the user defined type
   -> Definition db (Alter sch (DropSchemum td 'Typedef schema) db)
 dropType tydef = UnsafeDefinition $ "DROP TYPE" <+> renderSQL tydef <> ";"
@@ -240,7 +240,7 @@ dropType tydef = UnsafeDefinition $ "DROP TYPE" <+> renderSQL tydef <> ";"
 -- | Drop a type if it exists.
 dropTypeIfExists
   :: (Has sch db schema, KnownSymbol td)
-  => QualifiedAlias sch td
+  => SOP.K (Alias sch) td
   -- ^ name of the user defined type
   -> Definition db (Alter sch (DropSchemumIfExists td 'Typedef schema) db)
 dropTypeIfExists tydef = UnsafeDefinition $

@@ -347,7 +347,7 @@ in
 -}
 function
   :: (Has sch db schema, Has fun schema ('Function ('[x] :=> 'Returns y)))
-  => QualifiedAlias sch fun -- ^ function name
+  => K (Alias sch) fun -- ^ function name
   -> Fun db x y
 function = unsafeFunction . renderSQL
 
@@ -374,7 +374,7 @@ functionN
   :: ( Has sch db schema
      , Has fun schema ('Function (xs :=> 'Returns y))
      , SListI xs )
-  => QualifiedAlias sch fun -- ^ function alias
+  => K (Alias sch) fun -- ^ function alias
   -> FunN db xs y
 functionN = unsafeFunctionN . renderSQL
 

@@ -56,7 +56,7 @@ in the current database.
 A schema is essentially a namespace: it contains named objects
 (tables, data types, functions, and operators) whose names
 can duplicate those of other objects existing in other schemas.
-Named objects are accessed by `QualifiedAlias`es with the schema
+Named objects are accessed by qualified `Alias`es with the schema
 name as a prefix.
 
 >>> :{

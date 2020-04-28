@@ -79,7 +79,7 @@ insertInto
      , Has tab schema ('Table table)
      , SOP.SListI (TableToColumns table)
      , SOP.SListI row )
-  => QualifiedAlias sch tab
+  => SOP.K (Alias sch) tab
   -- ^ table
   -> QueryClause with db params (TableToColumns table)
   -- ^ what to insert
@@ -99,7 +99,7 @@ insertInto_
   :: ( Has sch db schema
      , Has tab schema ('Table table)
      , SOP.SListI (TableToColumns table) )
-  => QualifiedAlias sch tab
+  => SOP.K (Alias sch) tab
   -- ^ table
   -> QueryClause with db params (TableToColumns table)
   -- ^ what to insert
