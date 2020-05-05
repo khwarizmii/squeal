@@ -50,7 +50,7 @@ COMMENT statements
 -----------------------------------------}
 
 {- |
-When a user views a table in the database (i.e. with \d+ <table>), it is useful
+When a user views a table in the database (i.e. with @\\d+ \<table\>@), it is useful
 to be able to read a description of the table.
 
 >>> type DB = '["public" ::: '["table" ::: 'Table ('[] :=> '[])]]
@@ -71,7 +71,7 @@ commentOnTable alias comm = UnsafeDefinition $
   "COMMENT ON TABLE" <+> renderSQL alias <+> "IS" <+> escapeQuotedText comm <> ";"
 
 {- |
-When a user views a type in the database (i.e with \dT <type>), it is useful to
+When a user views a type in the database (i.e with @\\dT \<type\>@), it is useful to
 be able to read a description of the type.
 -}
 commentOnType
@@ -87,7 +87,7 @@ commentOnType alias comm = UnsafeDefinition $
   "COMMENT ON TYPE" <+> renderSQL alias <+> "IS" <+> escapeQuotedText comm <> ";"
 
 {- |
-When a user views a view in the database (i.e. with \dv <view>), it is useful
+When a user views a view in the database (i.e. with @\\dv \<view\>@), it is useful
 to be able to read a description of the view.
 -}
 commentOnView
@@ -103,7 +103,7 @@ commentOnView alias comm = UnsafeDefinition $
   "COMMENT ON VIEW" <+> renderSQL alias <+> "IS" <+> escapeQuotedText comm <> ";"
 
 {- |
-When a user views an index in the database (i.e. with \di+ <index>), it is
+When a user views an index in the database (i.e. with @\\di+ \<index\>@), it is
 useful to be able to read a description of the index.
 -}
 commentOnIndex
@@ -119,7 +119,7 @@ commentOnIndex alias comm = UnsafeDefinition $
   "COMMENT ON INDEX" <+> renderSQL alias <+> "IS" <+> escapeQuotedText comm <> ";"
 
 {- |
-When a user views a function in the database (i.e. with \df+ <function>), it is
+When a user views a function in the database (i.e. with @\\df+ \<function\>@), it is
 useful to be able to read a description of the function.
 -}
 commentOnFunction
@@ -135,7 +135,7 @@ commentOnFunction alias comm = UnsafeDefinition $
   "COMMENT ON FUNCTION" <+> renderSQL alias <+> "IS" <+> escapeQuotedText comm <> ";"
 
 {- |
-When a user views a table in the database (i.e. with \d+ <table>), it is useful
+When a user views a table in the database (i.e. with @\\d+ \<table\>@), it is useful
 to be able to view descriptions of the columns in that table.
 -}
 commentOnColumn
@@ -153,7 +153,7 @@ commentOnColumn table col comm = UnsafeDefinition $
   "COMMENT ON COLUMN" <+> renderSQL table <> "." <> renderSQL col <+> "IS" <+> escapeQuotedText comm <> ";"
 
 {- |
-When a user views a schema in the database (i.e. with \dn+ <schema>), it is
+When a user views a schema in the database (i.e. with @\\dn+ \<schema\>@), it is
 useful to be able to read a description.
 -}
 commentOnSchema
